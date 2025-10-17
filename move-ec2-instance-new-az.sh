@@ -143,10 +143,15 @@ fi
 
 # Launch the new instance
 echo "Launching new instance in $DEST_AZ (subnet $DEST_SUBNET_ID) ..."
+KEY_OPTION=()
+if [[ -n "$KEY_NAME" && "$KEY_NAME" != "None" ]]; then
+  KEY_OPTION=(--key-name "$KEY_NAME")
+fi
+
 NEW_INSTANCE_ID=$(aws ec2 run-instances \
   --image-id "$AMI_ID" \
   --instance-type "$INSTANCE_TYPE" \
-  --key-name "$KEY_NAME" \
+  "${KEY_OPTION[@]}" \
   --security-group-ids $SECURITY_GROUPS \
   --subnet-id "$DEST_SUBNET_ID" \
   --placement AvailabilityZone="$DEST_AZ" \
